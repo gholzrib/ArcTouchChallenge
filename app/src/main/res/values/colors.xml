@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#081C24</color>
+    <color name="colorPrimaryDark">#081C24</color>
+    <color name="colorAccent">#081C24</color>
+
+    <color name="background_movie_item">#F4F4F4</color>
+
+    <color name="text_movie_title">#081C24</color>
+    <color name="text_movie_date">#081C24</color>
+    <color name="text_genre_even">#081C24</color>
+    <color name="text_genre_odd">#00D373</color>
 </resources>

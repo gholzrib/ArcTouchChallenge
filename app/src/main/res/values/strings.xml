@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">ArcTouchChallenge</string>
+
+    <string name="try_again">Try Again</string>
+
+    <!-- Activity labels -->
+    <string name="activity_label_main_activity">TMDB Upcoming Movies</string>
+
+    <!-- Warnings -->
+    <string name="warning_no_internet_connection">No internet connection</string>
+    <string name="warning_no_data">There is no data available</string>
+
 </resources>
