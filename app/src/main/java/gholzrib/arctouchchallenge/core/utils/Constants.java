@@ -42,4 +42,6 @@ public class Constants {
 
     public static final String ERROR_REQUEST_UNSUCCESSFUL = "We were unable to complete your request, please try again later";
 
+    public static final String EXTRA_MOVIE_DETAILS = "extra_movie_details";
+
 }

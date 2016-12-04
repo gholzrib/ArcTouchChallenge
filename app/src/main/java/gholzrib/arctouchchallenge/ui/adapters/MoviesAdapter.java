@@ -1,6 +1,7 @@
 package gholzrib.arctouchchallenge.ui.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -28,6 +29,7 @@ import gholzrib.arctouchchallenge.core.models.TMDBConfiguration;
 import gholzrib.arctouchchallenge.core.utils.CheckConnection;
 import gholzrib.arctouchchallenge.core.utils.Constants;
 import gholzrib.arctouchchallenge.core.utils.PreferencesManager;
+import gholzrib.arctouchchallenge.ui.activities.MovieDetails;
 
 import static gholzrib.arctouchchallenge.core.models.TMDBConfiguration.IMAGE_TYPE_BACKDROP;
 import static gholzrib.arctouchchallenge.core.models.TMDBConfiguration.IMAGE_TYPE_POSTER;
@@ -38,7 +40,7 @@ import static gholzrib.arctouchchallenge.core.models.TMDBConfiguration.IMAGE_TYP
  * through guntherhr@gmail.com
  */
 
-public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieHolder> implements View.OnClickListener {
+public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieHolder> {
 
     private static final String TAG = MoviesAdapter.class.getSimpleName();
 
@@ -81,8 +83,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieHolde
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) holder.mRltPosterContainer.getLayoutParams();
         params.height = imageDimen;
         holder.mRltPosterContainer.setLayoutParams(params);
-
-        holder.mLnrContainer.setOnClickListener(this);
 
         String posterUrl = null;
         if (movie.getPoster_path() != null) {
@@ -179,15 +179,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieHolde
         notifyDataSetChanged();
     }
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.adp_movies_lnr_container:
-                // TODO: 01/12/2016 Open Movie Details Activity
-                break;
-        }
-    }
-
     /**
      * Creates a new Linear Layout to be used as a row of genres
      * @return
@@ -202,7 +193,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieHolde
         return mLnrGenresRow;
     }
 
-    public class MovieHolder extends RecyclerView.ViewHolder {
+    public class MovieHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         LinearLayout mLnrContainer;
         RelativeLayout mRltPosterContainer;
@@ -222,6 +213,19 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieHolde
             mTvTitle = (TextView) itemView.findViewById(R.id.adp_movies_tv_title);
             mTvReleaseDate = (TextView) itemView.findViewById(R.id.adp_movies_tv_release_date);
             mLnrGenres = (LinearLayout) itemView.findViewById(R.id.adp_movies_lnr_genres);
+
+            mLnrContainer.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.adp_movies_lnr_container:
+                    Intent intent = new Intent(mContext, MovieDetails.class);
+                    intent.putExtra(Constants.EXTRA_MOVIE_DETAILS, mUpcomingMoviesList.get(this.getAdapterPosition()));
+                    mContext.startActivity(intent);
+                    break;
+            }
         }
     }
 
