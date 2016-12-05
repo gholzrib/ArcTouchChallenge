@@ -180,6 +180,15 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieHolde
     }
 
     /**
+     * Remove all items from the list.
+     * Used before a new search.
+     */
+    public void removeAllItems() {
+        this.mUpcomingMoviesList.clear();
+        notifyDataSetChanged();
+    }
+
+    /**
      * Creates a new Linear Layout to be used as a row of genres
      * @return
      */

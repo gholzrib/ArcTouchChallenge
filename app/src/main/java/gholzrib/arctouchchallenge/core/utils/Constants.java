@@ -14,6 +14,7 @@ public class Constants {
     public static final String PARAMETER_API_KEY = "api_key";
     public static final String PARAMETER_LANGUAGE = "language";
     public static final String PARAMETER_PAGE = "page";
+    public static final String PARAMETER_QUERY = "query";
 
     public static final String RESPONSE_STATUS_CODE = "status_code";
     public static final String RESPONSE_STATUS_MESSAGE = "status_message";
@@ -35,6 +36,7 @@ public class Constants {
     public static final String REQUEST_PATH_GENRE = "genre";
     public static final String REQUEST_PATH_LIST = "list";
     public static final String REQUEST_PATH_CONFIGURATION = "configuration";
+    public static final String REQUEST_PATH_SEARCH = "search";
 
     public static final int RESPONSE_CODE_OK = 200;
     public static final int RESPONSE_CODE_UNAUTHORIZED = 401;

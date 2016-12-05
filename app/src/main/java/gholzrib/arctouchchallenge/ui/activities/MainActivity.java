@@ -1,13 +1,18 @@
 package gholzrib.arctouchchallenge.ui.activities;
 
+import android.app.Dialog;
 import android.graphics.Rect;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -29,6 +34,7 @@ import gholzrib.arctouchchallenge.core.models.Movie;
 import gholzrib.arctouchchallenge.core.models.TMDBConfiguration;
 import gholzrib.arctouchchallenge.core.requests.GenresRequest;
 import gholzrib.arctouchchallenge.core.requests.MoviesRequest;
+import gholzrib.arctouchchallenge.core.requests.SearchRequest;
 import gholzrib.arctouchchallenge.core.requests.TMDBConfigurationRequest;
 import gholzrib.arctouchchallenge.core.utils.CheckConnection;
 import gholzrib.arctouchchallenge.core.utils.Constants;
@@ -51,16 +57,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int REQUEST_OPERATION_GENRES = 0;
     private static final int REQUEST_OPERATION_UPCOMING_MOVIES = 1;
     private static final int REQUEST_OPERATION_TMDB_CONFIGURATION = 2;
+    private static final int REQUEST_OPERATION_SEARCH = 3;
 
     private static final String MESSAGE_LOADING_CONFIGURATION = "Loading configurations";
     private static final String MESSAGE_LOADING_GENRES = "Loading genres";
     private static final String MESSAGE_LOADING_UPCOMING_MOVIES = "Loading upcoming movies";
+    private static final String MESSAGE_LOADING_SEARCH_RESULTS = "Loading search results";
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ROOT);
 
     boolean hasNextPage = true;
+    boolean isSearching = false;
+
     private int nextPage = 1;
     private int currentOperation = -1;
+    private String searchQuery = "";
 
     MoviesAdapter mAdapter;
 
@@ -68,16 +79,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     LinearLayout mLnrWarningNoInternet;
     LinearLayout mLnrWarningNoData;
 
+    EditText mEdtQuery;
+
     HashMap<Integer, String> mGenres = new HashMap<>();
 
     DateAndTimeHandler mDateAndTimeHandler;
     LoadingDialog mLoadingDialog;
+    EndlessRecyclerViewScrollListener mEndlessScrollListener;
+    Dialog mSearchDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle(R.string.activity_label_main_activity);
+
 
         mDateAndTimeHandler = new DateAndTimeHandler(dateFormat);
         mLoadingDialog = new LoadingDialog(this, false);
@@ -92,12 +108,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 outRect.set(0, 0, 0, margin);
             }
         });
-        EndlessRecyclerViewScrollListener mEndlessScrollListener = new EndlessRecyclerViewScrollListener(mLinearLayoutManager) {
+        mEndlessScrollListener = new EndlessRecyclerViewScrollListener(mLinearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 if (hasNextPage) {
                     Log.i(TAG, "Page: " + page);
-                    attemptToExecuteRequest(new String[] {String.valueOf(page)}, REQUEST_OPERATION_UPCOMING_MOVIES);
+                    if (isSearching) {
+                        attemptToExecuteRequest(new String[]{searchQuery, String.valueOf(page)}, REQUEST_OPERATION_SEARCH);
+                    } else {
+                        attemptToExecuteRequest(new String[] {String.valueOf(page)}, REQUEST_OPERATION_UPCOMING_MOVIES);
+                    }
                 }
             }
         };
@@ -115,10 +135,59 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main_activity, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_search:
+                mSearchDialog = new Dialog(this);
+                View dialogView = getLayoutInflater().inflate(R.layout.dialog_search, null);
+
+                mEdtQuery = (EditText) dialogView.findViewById(R.id.dlg_search_edt_query);
+                dialogView.findViewById(R.id.dlg_search_btn_search).setOnClickListener(this);
+                dialogView.findViewById(R.id.dlg_search_btn_cancel).setOnClickListener(this);
+
+                mSearchDialog.setContentView(dialogView);
+                mSearchDialog.show();
+                break;
+            default:
+                break;
+        }
+        return true;
+    }
+
+    @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.act_main_btn_try_again:
                 attemptToExecuteRequest(null, REQUEST_OPERATION_TMDB_CONFIGURATION);
+                break;
+            case R.id.dlg_search_btn_search:
+                mEdtQuery.setError(null);
+                searchQuery = mEdtQuery.getText().toString();
+                if (!TextUtils.isEmpty(searchQuery)) {
+                    isSearching = true;
+                    nextPage = 1;
+                    mEndlessScrollListener.resetState();
+                    mAdapter.removeAllItems();
+                    mSearchDialog.dismiss();
+                    attemptToExecuteRequest(new String[]{searchQuery, String.valueOf(nextPage)}, REQUEST_OPERATION_SEARCH);
+                } else {
+                    isSearching = false;
+                    nextPage = 1;
+                    mEndlessScrollListener.resetState();
+                    mAdapter.removeAllItems();
+                    mSearchDialog.dismiss();
+                    attemptToExecuteRequest(new String[] {String.valueOf(nextPage)}, REQUEST_OPERATION_UPCOMING_MOVIES);
+                }
+                break;
+            case R.id.dlg_search_btn_cancel:
+                mSearchDialog.dismiss();
                 break;
         }
     }
@@ -135,6 +204,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
                 case REQUEST_OPERATION_UPCOMING_MOVIES:
                     mLoadingDialog.setMessage(MESSAGE_LOADING_UPCOMING_MOVIES);
+                    break;
+                case REQUEST_OPERATION_SEARCH:
+                    mLoadingDialog.setMessage(MESSAGE_LOADING_SEARCH_RESULTS);
                     break;
             }
             if (!mLoadingDialog.isShowing() && nextPage == 1) {
@@ -231,6 +303,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 MoviesRequest moviesRequest = new MoviesRequest(this, operation);
                 moviesRequest.doRequest(additionalParams, null);
                 break;
+            case REQUEST_OPERATION_SEARCH:
+                SearchRequest searchRequest = new SearchRequest(this, operation);
+                searchRequest.doRequest(additionalParams, null);
+                break;
         }
     }
 
@@ -274,6 +350,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 attemptToExecuteRequest(new String[] {String.valueOf(nextPage)}, REQUEST_OPERATION_UPCOMING_MOVIES);
                 break;
             case REQUEST_OPERATION_UPCOMING_MOVIES:
+            case REQUEST_OPERATION_SEARCH:
                 try {
                     if (!jsonObject.isNull(Constants.RESPONSE_PAGE)
                             && !jsonObject.isNull(Constants.RESPONSE_TOTAL_PAGES)
@@ -290,6 +367,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject jsonMovie = jsonArray.getJSONObject(i);
                             Movie movie = gson.fromJson(jsonMovie.toString(), Movie.class);
+                            if (isSearching && !movie.getTitle().toLowerCase().contains(searchQuery.toLowerCase())) {
+                                continue;
+                            }
                             for (int j = 0; j < movie.getGenre_ids().size(); j++) {
                                 String genre = mGenres.get(movie.getGenre_ids().get(j));
                                 if (genre != null) {
