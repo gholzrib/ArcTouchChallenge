@@ -21,7 +21,7 @@ public class TMDBConfigurationRequest extends RequestsHandler {
     }
 
     @Override
-    public void doRequest(String additionalParams, File picture) {
+    public void doRequest(String[] additionalParams, File picture) {
         String[] paths = new String[] { Constants.REQUEST_PATH_CONFIGURATION };
 
         Map<String, String> params = new HashMap<>();

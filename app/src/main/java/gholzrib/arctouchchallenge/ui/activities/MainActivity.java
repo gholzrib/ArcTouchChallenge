@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 if (hasNextPage) {
                     Log.i(TAG, "Page: " + page);
-                    attemptToExecuteRequest(String.valueOf(page), REQUEST_OPERATION_UPCOMING_MOVIES);
+                    attemptToExecuteRequest(new String[] {String.valueOf(page)}, REQUEST_OPERATION_UPCOMING_MOVIES);
                 }
             }
         };
@@ -200,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * @param additionalParams
      * @param operation
      */
-    private void attemptToExecuteRequest(String additionalParams, int operation) {
+    private void attemptToExecuteRequest(String[] additionalParams, int operation) {
         boolean hasConnection = CheckConnection.hasInternetConnection(this, false);
         setWarningAndListVisibilities(hasConnection);
         if (!hasConnection) {
@@ -271,7 +271,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Log.i(TAG, "JSONException: " + e.getMessage());
                     }
                 }
-                attemptToExecuteRequest(String.valueOf(nextPage), REQUEST_OPERATION_UPCOMING_MOVIES);
+                attemptToExecuteRequest(new String[] {String.valueOf(nextPage)}, REQUEST_OPERATION_UPCOMING_MOVIES);
                 break;
             case REQUEST_OPERATION_UPCOMING_MOVIES:
                 try {

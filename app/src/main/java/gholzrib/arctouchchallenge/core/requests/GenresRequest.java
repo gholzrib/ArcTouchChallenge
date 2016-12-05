@@ -21,7 +21,7 @@ public class GenresRequest extends RequestsHandler {
     }
 
     @Override
-    public void doRequest(String additionalParams, File picture) {
+    public void doRequest(String[] additionalParams, File picture) {
         String[] paths = new String[] { Constants.REQUEST_PATH_GENRE,
                 Constants.REQUEST_PATH_MOVIE,
                 Constants.REQUEST_PATH_LIST };

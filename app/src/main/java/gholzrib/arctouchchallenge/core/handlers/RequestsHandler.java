@@ -49,7 +49,7 @@ public abstract class RequestsHandler {
         return builder.build().toString();
     }
 
-    public abstract void doRequest(String additionalParams, File picture);
+    public abstract void doRequest(String[] additionalParams, File picture);
 
     protected void doRequestByUsingGet(final String url) {
         Request request = new Request.Builder()
