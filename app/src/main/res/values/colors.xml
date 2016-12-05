@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#081C24</color>
+    <color name="colorPrimaryDark">#081C24</color>
+    <color name="colorAccent">#081C24</color>
+
+    <color name="background_movie_item">#F4F4F4</color>
+    <color name="background_movie_details">#F4F4F4</color>
+    <color name="background_search_dialog">#F4F4F4</color>
+    <color name="background_btn_close">#081C24</color>
+    <color name="background_btn_search">#081C24</color>
+
+    <color name="borders_search_field">#081C24</color>
+
+    <color name="text_movie_title">#081C24</color>
+    <color name="text_movie_date">#081C24</color>
+    <color name="text_genre_even">#081C24</color>
+    <color name="text_genre_odd">#00D373</color>
+    <color name="text_search_dialog">#081C24</color>
+    <color name="text_search_button">#F4F4F4</color>
+</resources>

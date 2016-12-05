@@ -1,0 +1,6 @@
+Arc Touch Challenge
+Signed APK Info
+
+Key store password: challenge
+Alias: ArcTouch
+Key password: challenge

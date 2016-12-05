@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_search_dialog"
+    android:padding="@dimen/spacing_small">
+
+    <TextView
+        android:id="@+id/dlg_search_tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/search_title"
+        android:textColor="@color/text_search_dialog"
+        android:textStyle="bold"
+        android:textSize="@dimen/font_large"/>
+
+    <TextView
+        android:id="@+id/dlg_search_tv_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_small"
+        android:text="@string/search_message"
+        android:textColor="@color/text_search_dialog"
+        android:textSize="@dimen/font_normal"/>
+
+    <EditText
+        android:id="@+id/dlg_search_edt_query"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_small"
+        android:padding="@dimen/spacing_small"
+        android:background="@drawable/background_search_field"
+        android:textSize="@dimen/font_normal"
+        android:maxLines="1"
+        android:inputType="text"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/spacing_small"
+        android:layout_gravity="end">
+
+        <TextView
+            android:id="@+id/dlg_search_btn_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginRight="@dimen/spacing_small"
+            android:padding="@dimen/spacing_small"
+            android:text="@string/search_cancel"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:textColor="@color/text_search_button"
+            android:textSize="@dimen/font_small"
+            android:background="@color/background_btn_search"/>
+
+        <TextView
+            android:id="@+id/dlg_search_btn_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:padding="@dimen/spacing_small"
+            android:text="@string/search_title"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:textColor="@color/text_search_button"
+            android:textSize="@dimen/font_small"
+            android:background="@color/background_btn_search"/>
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
